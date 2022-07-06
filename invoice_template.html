@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Invoice Template</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,500;1,300;1,500&family=Nunito+Sans&display=swap');
+
+        .background-logo {
+            position: static;
+            left: -33.61%;
+            right: 49.24%;
+            top: 79.81%;
+            bottom: -10.2%;
+            /* transform: rotate(-90deg); */
+        }
+
+        .title-header {
+
+            font-family: 'montserrat', sans-serif;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 24px;
+            color: #000000;
+        }
+
+        .title-subheader {
+            font-family: 'montserrat', sans-serif;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 9px;
+            line-height: 20px;
+            color: #000000;
+        }
+
+        .logo-text {
+            font-family: 'nunito sans', sans-serif;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 19px;
+            display: flex;
+            align-items: center;
+            color: #000000;
+
+        }
+
+        th {
+            height: 40px;
+        }
+
+        td {
+            height: 40px;
+        }
+
+        tbody>tr {
+            border-bottom: #ebe9e9 1px solid;
+        }
+
+        .border-bottom {
+            border-bottom: 1px solid #ebe9e9;
+        }
+
+        @media only screen and (min-width: 768px) {
+
+            /* For desktop: */
+            .background-logo {
+                position: static;
+                left: -33.61%;
+                right: 49.24%;
+                top: 79.81%;
+                bottom: -10.2%;
+                /* transform: rotate(-90deg); */
+            }
+
+            .title-header {
+                font-weight: 700;
+                font-size: 24px;
+                line-height: 32px;
+            }
+
+            .title-subheader {
+                font-weight: 400;
+                font-size: 11px;
+                line-height: 20px;
+            }
+
+            .logo-text {
+
+                font-size: 16px;
+                line-height: 19px;
+                display: flex;
+                align-items: center;
+
+
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="relative flex content-center">
+            <img src="./halflogo.svg" alt="delivery app logo"
+                class=" background-logo pt-[40vh] sm:pt-[30vh] md:pt-[30vh] h-full" style="position: static;">
+
+
+            <div class=" absolute container mx-auto px-16 sm:px-32 md:px-[200px]">
+                <div class="flex justify-between w-full h-full pt-[60px]">
+                    <div>
+                        <div class="title-header pt-3">
+                            Invoice
+                        </div>
+                        <div class="title-subheader">
+                            {{invoiceNumber || '[Invoice Number]'}}
+                        </div>
+
+                    </div>
+                    <div class="text-right">
+                        <div class="flex content-center justify-end">
+                            <img src="./borderless-logo.svg" alt="borderless-logo" class="w-8 sm:w-10 content-center">
+                            <div class="py-4"><span class="logo-text">BorderlessHQ</span></div>
+                        </div>
+                        <div class="title-subheader">
+                            <span class="">2055 Limestone Rd, 200-C,<br>
+                                Wilmington, DE 19808, USA. <br> pilot@borderlesshq.com</span>
+                        </div>
+                        <div class="title-subheader">
+                            <span class="">
+                                {{date ||'[Date]'}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full">
+                    <p class="title-subheader font-bold">Billed to</p>
+                    <p class="title-subheader">{{ recipientName || '[Recepient Name]' }}</p>
+                    <p class="title-subheader">{{ recipientAddress || '[Recepient Address]' }}</p>
+                </div>
+                <div class="w-full mt-4">
+                    <p class="title-subheader font-bold">Billed Period</p>
+                    <p class="title-subheader">
+                        {{ startDate || '[Start Date]' }}
+                        to
+                        <span>
+                            {{ endDate || '[End Date]' }}
+                        </span>
+                    </p>
+                </div>
+                <div class="mt-8 title-subheader">
+                    <table class=" w-full">
+                        <thead class="bg-black text-white">
+                            <tr class="text-left">
+                                <th class="pl-6">Description</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="item in superTable" :key="item.title">
+                            <tr>
+                                <td class="pl-6">{{item.title}}</td>
+                                <td>{{item.amount}}</td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                    <div class="grid justify-items-end" v-for="item in subTable" :key="item.title">
+                        <div class="grid grid-cols-2 w-3/4 md:w-2/4 border-bottom py-2">
+                            <div class="pl-6">{{item.title}}</div>
+                            <div class="flex justify-center md:justify-start pl-2 md:pl-4">{{item.amount}}</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="bg-black w-full h-[20px]">
+
+        </div>
+    </footer>
+</body>
+<script src="https://unpkg.com/vue@3"></script>
+
+
+
+<script>
+    const { createApp } = Vue
+
+    createApp({
+        data() {
+            return {
+                invoiceNumber: '',
+                date: null,
+                recipientName: '',
+                recipientAddress: '',
+                startDate: null,
+                endDate: null,
+
+                superTable: [
+                    {
+                        title: 'Courier Service (Starter)',
+                        amount: '$60.00'
+                    },
+                    {
+                        title: 'Extra Volume',
+                        amount: '$10.00'
+                    }
+                ],
+                subTable: [
+                    {
+                        title: 'Subtotal',
+                        amount: '$70.00'
+                    },
+                    {
+                        title: 'Total excluding tax',
+                        amount: '$70.00'
+                    },
+                    {
+                        title: 'Tax',
+                        amount: '$7.00 (10%)'
+                    },
+                    {
+                        title: 'Total',
+                        amount: '$77.00'
+                    },
+                    {
+                        title: 'Amount  due',
+                        amount: '$77.00'
+                    }
+                ]
+            }
+        }
+    }).mount('#app')
+</script>
+
+</html>
